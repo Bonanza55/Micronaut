@@ -1,4 +1,6 @@
-package com.vnq;
+package com.vnq.Dbms;
+
+import com.vnq.Constants.Constants;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,6 +10,7 @@ import java.sql.*;
 
 
 abstract class Dbms {
+    Constants constants = new Constants();
     String dbmsDriver = null;
     int level = 0;
     Connection con;
@@ -48,7 +51,7 @@ abstract class Dbms {
         return con;
     }
 
-    ResultSet query(String query) {
+    public ResultSet query(String query) {
         ResultSet rs;
         rs = null;
         try {
@@ -84,7 +87,7 @@ abstract class Dbms {
         }
     }
 
-    String getSqlCmd(String in_fname) {
+    public String getSqlCmd(String in_fname) {
         String sqlCmd = null;
         try {
             File file = new File(in_fname);
@@ -99,8 +102,7 @@ abstract class Dbms {
             fileReader.close();
             sqlCmd = stringBuffer.toString();
         } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
+            return constants.DBMS_ERROR_GENERAL;
         }
         return sqlCmd;
     }

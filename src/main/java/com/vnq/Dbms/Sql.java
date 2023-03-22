@@ -1,18 +1,20 @@
-package com.vnq;
+package com.vnq.Dbms;
+
+import com.vnq.Dbms.Dbms;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-class Sql extends com.vnq.Dbms {
+public class Sql extends Dbms {
     Properties prop   = new Properties();
     String     driver = null;
     String     url    = null;
     String     pwd    = null;
 
     InputStream input = null;
-    Sql(String propFile, String uid, String server) {
+    public Sql(String propFile, String uid, String server) {
         try {
             input = new FileInputStream(propFile);
             prop.load(input);

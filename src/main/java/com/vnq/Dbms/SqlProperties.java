@@ -1,4 +1,4 @@
-package com.vnq;
+package com.vnq.Dbms;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -7,11 +7,11 @@ import java.util.Properties;
 
 public class SqlProperties {
     String sqlTDL = "";
-    String driver = "";
-    String uid = "";
-    String server = "";
-    String outFile = "";
-    String errTxt = "";
+    public String driver = "";
+    public String uid = "";
+    public String server = "";
+    public String outFile = "";
+    public String errTxt = "";
 
     // GET-LOGIN-DETAILS
     public void getSqlProperties() {
