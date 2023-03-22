@@ -1,0 +1,4 @@
+select distinct substring(P.LastName,1,30) as LastName,
+                substring(P.FirstName,1,30) as FirstName
+from Persons P
+order by LastName

@@ -1,0 +1,11 @@
+select distinct O.OrderID,
+                I.ItemID,
+                I.ItemPrice,
+                O.Quantity,
+                substring(I.ItemDesc,1,20) as ItemDesc,
+                substring(P.FirstName,1,20) as FirstName,
+                substring(P.LastName,1,20) as LastName
+from Persons P, Item I, Orders O
+where P.PersonID = O.PersonID
+  and O.ItemID = I.ItemID
+  orderby O.OrderID
