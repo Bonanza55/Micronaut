@@ -1,0 +1,5 @@
+select distinct I.ItemID,
+                I.ItemPrice,
+                substring(I.ItemDesc,1,40) as ItemDesc
+ from Item I
+order by I.ItemID

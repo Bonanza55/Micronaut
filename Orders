@@ -8,4 +8,4 @@ select distinct O.OrderID,
 from Persons P, Item I, Orders O
 where P.PersonID = O.PersonID
   and O.ItemID = I.ItemID
-  orderby O.OrderID
+  order by O.OrderID

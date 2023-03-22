@@ -15,20 +15,21 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
+@SuppressWarnings("unchecked")
 @Controller("/query")
 public class ApplicationController {
-    GetSqlProperties getSqlProperties = new GetSqlProperties();
+    SqlProperties sqlProperties = new SqlProperties();
 
-    @Get("/json/{sqlFileName}")
+    @Get("/json/{ReportName}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String json(@PathVariable("sqlFileName") String sqlText) {
+    public String json(@PathVariable("ReportName") String sqlText) {
 
         // OPEN-DB-CONNECTION
-        getSqlProperties.getSqlProperties();
-        Sql sql = new Sql(getSqlProperties.driver, getSqlProperties.uid, getSqlProperties.server);
+        sqlProperties.getSqlProperties();
+        Sql db = new Sql(sqlProperties.driver, sqlProperties.uid, sqlProperties.server);
 
         //GET-SQL-FILE
-        String sqlTDL = sql.getSqlCmd(sqlText);
+        String sqlTDL = db.getSqlCmd(sqlText);
 
         JSONObject Server = new JSONObject();
         JSONObject trailObj = new JSONObject();
@@ -36,7 +37,7 @@ public class ApplicationController {
         String jsonString;
 
         try {
-            ResultSet sqlRs = sql.query(sqlTDL);
+            ResultSet sqlRs = db.query(sqlTDL);
             ResultSetMetaData rsmd = sqlRs.getMetaData();
             int cc = rsmd.getColumnCount();
             int j = 0;
@@ -52,7 +53,7 @@ public class ApplicationController {
                 }
                 j++;
                 if (j == 5000) {
-                    sql.commit();
+                    db.commit();
                     j = 0;
                 }
                 fieldA.add(fieldObj);
@@ -64,42 +65,42 @@ public class ApplicationController {
             trailerA.add(trailObj);
             Server.put("Trailer", trailerA);
             jsonString = Server.toJSONString();
-            sql.commit();
-            sql.close();
-            j = 0;
+            db.commit();
+            db.close();
         } catch (SQLException ex4) {
             return "\n***** DB-FETCH Error  *****\n";
         }
         return jsonString;
     }
 
-    @Get("/report/{sqlFileName}")
+    @Get("/report/{ReportName}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String report(@PathVariable("sqlFileName") String sqlText) {
+    public String report(@PathVariable("ReportName") String sqlText) {
 
-        String dataElement = "0";
+        String dataElement;
         int rowCount = 0;
         int totalRows = 0;
 
         // OPEN-DB-CONNECTION
-        getSqlProperties.getSqlProperties();
-        Sql sql = new Sql(getSqlProperties.driver, getSqlProperties.uid, getSqlProperties.server);
+        sqlProperties.getSqlProperties();
+        Sql db = new Sql(sqlProperties.driver, sqlProperties.uid, sqlProperties.server);
 
         //GET-SQL-FILE
-        String sqlTDL = sql.getSqlCmd(sqlText);
+        String sqlTDL = db.getSqlCmd(sqlText);
 
         try {
             FileWriter fw;
-            if (0 == getSqlProperties.outFile.compareTo("stdout")) {
+            if (0 == sqlProperties.outFile.compareTo("stdout")) {
                 fw = new FileWriter(FileDescriptor.out);
             } else {
-                fw = new FileWriter(getSqlProperties.outFile);
+                fw = new FileWriter(sqlProperties.outFile);
             }
             fw.write("***** Result Set *****\n\n");
             try {
-                ResultSet sqlRs = sql.query(sqlTDL);
+                ResultSet sqlRs = db.query(sqlTDL);
                 ResultSetMetaData rsmd = sqlRs.getMetaData();
                 int columnCount = rsmd.getColumnCount();
+                // Write column names
                 for (int i = 1; i <= columnCount; i++) {
                     if (i == columnCount) {
                         fw.write(String.format("%-20s\n", rsmd.getColumnName(i)));
@@ -108,6 +109,7 @@ public class ApplicationController {
                     }
                 }
                 fw.flush();
+                // Write data rows
                 while (sqlRs.next()) {
                     totalRows++;
                     for (int i = 1; i <= columnCount; i++) {
@@ -119,23 +121,21 @@ public class ApplicationController {
                         }
                         rowCount++;
                         if (rowCount == 5000) {
-                            sql.commit();
+                            db.commit();
                             rowCount = 0;
                         }
                     }
                 }
-                sql.commit();
-                sql.close();
+                db.commit();
+                db.close();
                 fw.write("\n***** Returned: " + totalRows + " Rows *****\n");
             } catch (SQLException ex4) {
                 return "\n***** DB-FETCH Error  *****\n";
             }
             fw.flush();
-            totalRows = 0;
-            rowCount = 0;
         } catch (IOException e) {
             return "\n***** OPEN OUTPUT FILE Error  *****\n";
         }
-        return getSqlProperties.errTxt;
+        return sqlProperties.errTxt;
     }
 }

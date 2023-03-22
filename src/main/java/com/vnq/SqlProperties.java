@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class GetSqlProperties {
+public class SqlProperties {
     String sqlTDL = "";
     String driver = "";
     String uid = "";
