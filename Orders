@@ -1,10 +1,20 @@
 select distinct O.OrderID,
-                I.ItemID,
-                I.ItemPrice,
                 O.Quantity,
+                O.SalesDate,
+                O.SalesTime,
+                I.ItemID,
+                I.Sale,
+                P.PersonID,
                 substring(I.ItemDesc,1,20) as ItemDesc,
                 substring(P.FirstName,1,20) as FirstName,
-                substring(P.LastName,1,20) as LastName
+                substring(P.LastName,1,20) as LastName,
+                CAST(I.ItemPrice as money),
+                CAST(I.SalesPrice as money) as SalesPrice,
+                CAST(I.ItemPrice*I.Discount as money) as Discount,
+                CAST(I.ItemPrice*I.TaxRate as money) as Tax,
+                CAST(I.SalesPrice*I.TaxRate as money) as TaxOnSale,
+                CAST((I.ItemPrice*I.TaxRate) + I.ItemPrice as money) * O.Quantity as Total,
+                CAST((I.SalesPrice*I.TaxRate) + I.SalesPrice as money) * O.Quantity as TotalOnSale
 from Persons P, Item I, Orders O
 where P.PersonID = O.PersonID
   and O.ItemID = I.ItemID

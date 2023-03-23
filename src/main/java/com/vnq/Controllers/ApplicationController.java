@@ -22,7 +22,7 @@ public class ApplicationController {
     }
 
     @Get("/report/{ReportName}")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public String report(@PathVariable("ReportName") String sqlText) {
         return reportDelegate.view(sqlText);
     }

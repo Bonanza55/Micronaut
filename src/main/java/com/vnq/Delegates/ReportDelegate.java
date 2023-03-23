@@ -27,10 +27,11 @@ public class ReportDelegate {
 
         //GET-SQL-FILE
         String sqlTDL = db.getSqlCmd(sqlText);
-        if (sqlTDL.equals(constants.DBMS_ERROR_GENERAL)) {
-            return sqlText + " Not found";
+        if (sqlTDL.equals(constants.DBMS_ERROR_GENERAL) || sqlTDL.isEmpty() || sqlText.isEmpty()) {
+            return "**** " + sqlText + " Not found ****";
         }
 
+        // GET-RESULTS
         try {
             FileWriter fw;
             if (0 == sqlProperties.outFile.compareTo("stdout")) {
@@ -73,7 +74,7 @@ public class ReportDelegate {
                 db.close();
                 fw.write("\n***** Returned: " + totalRows + " Rows *****\n");
             } catch (SQLException ex4) {
-                return "\n***** DB-FETCH Error ReportDelegate  *****\n";
+                fw.write("\n***** DB-FETCH Error ReportDelegate  *****\n");
             }
             fw.flush();
         } catch (IOException e) {

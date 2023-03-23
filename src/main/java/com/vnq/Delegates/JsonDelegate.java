@@ -1,9 +1,8 @@
 package com.vnq.Delegates;
 
+import com.vnq.Constants.Constants;
 import com.vnq.Dbms.Sql;
 import com.vnq.Dbms.SqlProperties;
-import com.vnq.Constants;
-import com.vnq.Constants.Constants;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -13,6 +12,7 @@ import java.sql.SQLException;
 
 @SuppressWarnings("unchecked")
 public class JsonDelegate {
+    Constants constants = new Constants();
     SqlProperties sqlProperties = new SqlProperties();
 
     public String view(String sqlText) {
@@ -23,12 +23,16 @@ public class JsonDelegate {
 
         //GET-SQL-FILE
         String sqlTDL = db.getSqlCmd(sqlText);
+        if (sqlTDL.equals(constants.DBMS_ERROR_GENERAL) || sqlTDL.isEmpty() || sqlText.isEmpty()) {
+            return "**** " + sqlText + " Not found ****";
+        }
 
         JSONObject Server = new JSONObject();
         JSONObject trailObj = new JSONObject();
         JSONArray trailerA = new JSONArray();
         String jsonString;
 
+        // GET-RESULTS
         try {
             ResultSet sqlRs = db.query(sqlTDL);
             ResultSetMetaData rsmd = sqlRs.getMetaData();
