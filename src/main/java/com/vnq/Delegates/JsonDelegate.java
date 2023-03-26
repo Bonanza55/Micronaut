@@ -1,8 +1,9 @@
 package com.vnq.Delegates;
 
-import com.vnq.Constants.Constants;
-import com.vnq.Dbms.Sql;
+import com.vnq.Constants.GlobalConstants;
+import com.vnq.Dbms.*;
 import com.vnq.Dbms.SqlProperties;
+import com.vnq.Controllers.JSONRequest;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -12,10 +13,12 @@ import java.sql.SQLException;
 
 @SuppressWarnings("unchecked")
 public class JsonDelegate {
-    Constants constants = new Constants();
+    GlobalConstants globalConstants = new GlobalConstants();
     SqlProperties sqlProperties = new SqlProperties();
 
-    public String view(String sqlText) {
+    // Read from DB table and produce JSON response.
+    // Input is SQL statement to execute.
+    public String view(JSONRequest jsonRequest,String sqlText) {
 
         // OPEN-DB-CONNECTION
         sqlProperties.getSqlProperties();
@@ -23,7 +26,7 @@ public class JsonDelegate {
 
         //GET-SQL-FILE
         String sqlTDL = db.getSqlCmd(sqlText);
-        if (sqlTDL.equals(constants.DBMS_ERROR_GENERAL) || sqlTDL.isEmpty() || sqlText.isEmpty()) {
+        if (sqlTDL.equals(db.DBMS_ERROR_GENERAL) || sqlTDL.isEmpty() || sqlText.isEmpty()) {
             return "**** " + sqlText + " Not found ****";
         }
 
@@ -44,6 +47,7 @@ public class JsonDelegate {
             while (sqlRs.next()) {
                 JSONObject fieldObj = new JSONObject();
                 JSONArray fieldA = new JSONArray();
+                // Get Column names and data
                 for (int i = 1; i <= cc; i++) {
                     dataElement = sqlRs.getString(i).trim();
                     fieldObj.put(rsmd.getColumnName(i), dataElement);

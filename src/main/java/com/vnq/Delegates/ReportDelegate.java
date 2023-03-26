@@ -1,6 +1,6 @@
 package com.vnq.Delegates;
 
-import com.vnq.Constants.Constants;
+import com.vnq.Constants.GlobalConstants;
 import com.vnq.Dbms.Sql;
 import com.vnq.Dbms.SqlProperties;
 
@@ -13,8 +13,10 @@ import java.sql.SQLException;
 
 public class ReportDelegate {
     SqlProperties sqlProperties = new SqlProperties();
-    Constants constants = new Constants();
+    GlobalConstants globalConstants = new GlobalConstants();
 
+    // Read from DB table and produce report
+    // Input is SQL statement to execute.
     public String view(String sqlText) {
 
         String dataElement;
@@ -27,7 +29,7 @@ public class ReportDelegate {
 
         //GET-SQL-FILE
         String sqlTDL = db.getSqlCmd(sqlText);
-        if (sqlTDL.equals(constants.DBMS_ERROR_GENERAL) || sqlTDL.isEmpty() || sqlText.isEmpty()) {
+        if (sqlTDL.equals(db.DBMS_ERROR_GENERAL) || sqlTDL.isEmpty() || sqlText.isEmpty()) {
             return "**** " + sqlText + " Not found ****";
         }
 

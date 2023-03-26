@@ -1,6 +1,6 @@
 package com.vnq.Dbms;
 
-import com.vnq.Constants.Constants;
+import com.vnq.Constants.GlobalConstants;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,7 +10,9 @@ import java.sql.*;
 
 
 abstract class Dbms {
-    Constants constants = new Constants();
+
+    public String DBMS_ERROR_GENERAL = "DBMS_ERROR_GENERAL";
+    GlobalConstants constants = new GlobalConstants();
     String dbmsDriver = null;
     int level = 0;
     Connection con;
