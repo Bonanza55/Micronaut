@@ -104,7 +104,7 @@ abstract class Dbms {
             fileReader.close();
             sqlCmd = stringBuffer.toString();
         } catch (IOException e) {
-            return constants.DBMS_ERROR_GENERAL;
+            return "File " + in_fname + " IO Exception";
         }
         return sqlCmd;
     }
