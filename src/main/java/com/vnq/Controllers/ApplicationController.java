@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
-@Controller("/query")
+@Controller("/vnq")
 public class ApplicationController {
 
     private static final String HEADER_X_LOCALE = "en-US";
