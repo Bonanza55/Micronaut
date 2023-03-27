@@ -14,7 +14,6 @@ import java.sql.SQLException;
 
 public class ReportDelegate {
 
-    GlobalConstants globalConstants = new GlobalConstants();
     SqlProperties sqlProperties = new SqlProperties();
 
     // Read from DB table and produce report
@@ -78,12 +77,12 @@ public class ReportDelegate {
                 db.close();
                 fw.write("\n***** Returned: " + totalRows + " Rows *****\n");
             } catch (SQLException ex4) {
-                return globalConstants.DB_FETCH_ERROR;
+                return GlobalConstants.DB_FETCH_ERROR;
             }
             fw.flush();
         } catch (IOException e) {
-            return globalConstants.OUT_FILE_ERROR;
+            return GlobalConstants.OUT_FILE_ERROR;
         }
-        return sqlProperties.errTxt;
+        return GlobalConstants.REPORT_RUN_SUCCESS;
     }
 }

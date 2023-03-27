@@ -1,6 +1,7 @@
 package com.vnq.Delegates;
 
 import com.vnq.DataTransferObject.ReportRequest;
+import com.vnq.Constants.GlobalConstants;
 import com.vnq.Dbms.Sql;
 import com.vnq.Dbms.SqlProperties;
 import org.json.simple.JSONArray;
@@ -67,7 +68,7 @@ public class JsonDelegate {
             db.commit();
             db.close();
         } catch (SQLException ex4) {
-            return ("\n***** DB-FETCH Error JsonDelegate *****\n");
+            return GlobalConstants.DB_FETCH_ERROR;
         }
         return jsonString;
     }
