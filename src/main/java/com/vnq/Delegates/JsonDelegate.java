@@ -1,9 +1,8 @@
 package com.vnq.Delegates;
 
-import com.vnq.Constants.GlobalConstants;
-import com.vnq.Dbms.*;
+import com.vnq.DataTransferObject.ReportRequest;
+import com.vnq.Dbms.Sql;
 import com.vnq.Dbms.SqlProperties;
-import com.vnq.Controllers.JSONRequest;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -13,21 +12,20 @@ import java.sql.SQLException;
 
 @SuppressWarnings("unchecked")
 public class JsonDelegate {
-    GlobalConstants globalConstants = new GlobalConstants();
     SqlProperties sqlProperties = new SqlProperties();
 
     // Read from DB table and produce JSON response.
     // Input is SQL statement to execute.
-    public String view(String sqlText,JSONRequest jsonRequest) {
+    public String view(ReportRequest reportRequest) {
 
         // OPEN-DB-CONNECTION
         sqlProperties.getSqlProperties();
         Sql db = new Sql(sqlProperties.driver, sqlProperties.uid, sqlProperties.server);
 
         //GET-SQL-FILE
-        String sqlTDL = db.getSqlCmd(sqlText);
-        if (sqlTDL.equals(db.DBMS_ERROR_GENERAL) || sqlTDL.isEmpty() || sqlText.isEmpty()) {
-            return "**** " + sqlText + " Not found ****";
+        String sqlTDL = db.getSqlCmd(reportRequest.reportName);
+        if (sqlTDL.equals(db.DBMS_ERROR_GENERAL) || sqlTDL.isEmpty() || reportRequest.reportName.isEmpty()) {
+            return "**** " + reportRequest.reportName + " Not found ****";
         }
 
         JSONObject Server = new JSONObject();
@@ -59,7 +57,7 @@ public class JsonDelegate {
                 }
                 fieldA.add(fieldObj);
                 details.add(fieldA);
-                Server.put(sqlText, details);
+                Server.put(reportRequest.reportName, details);
                 rowCount++;
             }
             trailObj.put("Row Count", rowCount);

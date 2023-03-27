@@ -1,6 +1,7 @@
 package com.vnq.Delegates;
 
 import com.vnq.Constants.GlobalConstants;
+import com.vnq.DataTransferObject.ReportRequest;
 import com.vnq.Dbms.Sql;
 import com.vnq.Dbms.SqlProperties;
 
@@ -12,12 +13,13 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 public class ReportDelegate {
-    SqlProperties sqlProperties = new SqlProperties();
+
     GlobalConstants globalConstants = new GlobalConstants();
+    SqlProperties sqlProperties = new SqlProperties();
 
     // Read from DB table and produce report
     // Input is SQL statement to execute.
-    public String view(String sqlText) {
+    public String view(ReportRequest reportRequest) {
 
         String dataElement;
         int rowCount = 0;
@@ -28,9 +30,9 @@ public class ReportDelegate {
         Sql db = new Sql(sqlProperties.driver, sqlProperties.uid, sqlProperties.server);
 
         //GET-SQL-FILE
-        String sqlTDL = db.getSqlCmd(sqlText);
-        if (sqlTDL.equals(db.DBMS_ERROR_GENERAL) || sqlTDL.isEmpty() || sqlText.isEmpty()) {
-            return "**** " + sqlText + " Not found ****";
+        String sqlTDL = db.getSqlCmd(reportRequest.reportName);
+        if (sqlTDL.equals(db.DBMS_ERROR_GENERAL) || sqlTDL.isEmpty() || reportRequest.reportName.isEmpty()) {
+            return "**** " + reportRequest.reportName + " Not found ****";
         }
 
         // GET-RESULTS
@@ -76,11 +78,11 @@ public class ReportDelegate {
                 db.close();
                 fw.write("\n***** Returned: " + totalRows + " Rows *****\n");
             } catch (SQLException ex4) {
-                fw.write("\n***** DB-FETCH Error ReportDelegate  *****\n");
+                return globalConstants.DB_FETCH_ERROR;
             }
             fw.flush();
         } catch (IOException e) {
-            return "\n***** OPEN OUTPUT FILE Error ReportDelegate  *****\n";
+            return globalConstants.OUT_FILE_ERROR;
         }
         return sqlProperties.errTxt;
     }
