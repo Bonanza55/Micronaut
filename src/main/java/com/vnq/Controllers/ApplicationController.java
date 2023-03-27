@@ -1,8 +1,8 @@
 package com.vnq.Controllers;
 
 import com.vnq.DataTransferObject.ReportRequest;
-import com.vnq.Delegates.JsonDelegate;
-import com.vnq.Delegates.ReportDelegate;
+import com.vnq.Delegates.WebReportDelegate;
+import com.vnq.Delegates.FileReportDelegate;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -19,8 +19,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 public class ApplicationController {
 
     private static final String HEADER_X_LOCALE = "en-US";
-    public JsonDelegate jsonDelegate = new JsonDelegate();
-    public ReportDelegate reportDelegate = new ReportDelegate();
+    public WebReportDelegate webReportDelegate = new WebReportDelegate();
+    public FileReportDelegate fileReportDelegate = new FileReportDelegate();
 
     // JSON report API.
     @Operation(summary = "Run JSON Report",
@@ -38,7 +38,7 @@ public class ApplicationController {
                     content = @Content(mediaType = MediaType.ALL)))
     @Post(uri = "/RunWebReport/")
     public String RunWebReport(@Body ReportRequest reportRequest) {
-        return jsonDelegate.view(reportRequest);
+        return webReportDelegate.view(reportRequest);
     }
 
     @Operation(summary = "Run DB Report",
@@ -56,6 +56,6 @@ public class ApplicationController {
                     content = @Content(mediaType = MediaType.ALL)))
     @Post(uri = "/RunFileReport/")
     public String RunFileReport(@Body ReportRequest reportRequest) {
-        return reportDelegate.view(reportRequest);
+        return fileReportDelegate.view(reportRequest);
     }
 }

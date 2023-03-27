@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
-public class ReportDelegate {
+public class FileReportDelegate {
 
     SqlProperties sqlProperties = new SqlProperties();
 

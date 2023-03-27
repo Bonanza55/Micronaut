@@ -12,7 +12,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 @SuppressWarnings("unchecked")
-public class JsonDelegate {
+public class WebReportDelegate {
     SqlProperties sqlProperties = new SqlProperties();
 
     // Read from DB table and produce JSON response.
