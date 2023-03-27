@@ -18,7 +18,7 @@ public class JsonDelegate {
 
     // Read from DB table and produce JSON response.
     // Input is SQL statement to execute.
-    public String view(JSONRequest jsonRequest,String sqlText) {
+    public String view(String sqlText,JSONRequest jsonRequest) {
 
         // OPEN-DB-CONNECTION
         sqlProperties.getSqlProperties();

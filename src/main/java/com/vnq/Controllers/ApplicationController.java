@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @Controller("/query")
 public class ApplicationController {
@@ -28,18 +29,14 @@ public class ApplicationController {
                             example = "en-US")
             },
             requestBody = @RequestBody(description = "JSON report request body",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = JSONRequest.class))))
-    @Post(value = "/json/{ReportName}")
-    public String json(@Body JSONRequest jsonRequest, @PathVariable("ReportName") String sqlText) {
-        return jsonDelegate.view(jsonRequest, sqlText);
+                content = @Content(mediaType = MediaType.APPLICATION_JSON,
+                 schema = @Schema(implementation = JSONRequest.class))),
+              responses = @ApiResponse(responseCode = "200",
+                content = @Content(mediaType = MediaType.ALL)))
+    @Post(uri = "/json/{ReportName}")
+    public String json(@PathVariable("ReportName") String sqlText,@Body JSONRequest jsonRequest) {
+        return jsonDelegate.view(sqlText,jsonRequest);
     }
-    //@Post(value = "/json/{ReportName}")
-    //@Consumes(MediaType.APPLICATION_JSON)
-    //@Produces(MediaType.TEXT_PLAIN)
-    //public String json(@Body JSONRequest jsonRequest, @PathVariable("ReportName") String sqlText) {
-    //    return jsonDelegate.view(jsonRequest,sqlText);
-    // }
 
     // Table report.
     @Post("/report/{ReportName}")
