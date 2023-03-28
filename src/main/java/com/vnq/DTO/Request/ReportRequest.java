@@ -1,4 +1,4 @@
-package com.vnq.DataTransferObject;
+package com.vnq.DTO.Request;
 
 public class ReportRequest {
     public String reportName;

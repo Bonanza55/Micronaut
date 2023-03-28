@@ -1,8 +1,9 @@
 package com.vnq.Controllers;
 
-import com.vnq.DataTransferObject.ReportRequest;
-import com.vnq.Delegates.WebReportDelegate;
-import com.vnq.Delegates.FileReportDelegate;
+import com.vnq.DTO.Request.ReportRequest;
+import com.vnq.Delegates.Customers.CustomersDelegate;
+import com.vnq.Delegates.Reports.WebReportDelegate;
+import com.vnq.Delegates.Reports.FileReportDelegate;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -22,8 +23,10 @@ public class ApplicationController {
     public WebReportDelegate webReportDelegate = new WebReportDelegate();
     public FileReportDelegate fileReportDelegate = new FileReportDelegate();
 
+    public CustomersDelegate customersDelegate = new CustomersDelegate();
+
     // JSON report API.
-    @Operation(summary = "Run JSON Report",
+    @Operation(summary = "Run Dynamic JSON Report",
             description = "Take in a report name and return json",
             parameters = {
                     @Parameter(name = HEADER_X_LOCALE,
@@ -31,7 +34,7 @@ public class ApplicationController {
                             schema = @Schema(type = "string"),
                             example = "en-US")
             },
-            requestBody = @RequestBody(description = "Report request body",
+            requestBody = @RequestBody(description = "Report request name",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
                             schema = @Schema(implementation = ReportRequest.class))),
             responses = @ApiResponse(responseCode = "200",
@@ -41,6 +44,13 @@ public class ApplicationController {
         return webReportDelegate.view(reportRequest);
     }
 
+    // Customers Report API
+    @Operation(summary = "View Customers Report",
+            description = "Call the DB and return all customers",
+            responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
+    @Post(uri = "/viewCustomers/")
+    public String ViewCustomers() { return customersDelegate.viewCustomers(); }
+
     @Operation(summary = "Run DB Report",
             description = "Take in a report name and return rows",
             parameters = {
@@ -49,7 +59,7 @@ public class ApplicationController {
                             schema = @Schema(type = "string"),
                             example = "en-US")
             },
-            requestBody = @RequestBody(description = "Report request body",
+            requestBody = @RequestBody(description = "Report request name",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
                             schema = @Schema(implementation = ReportRequest.class))),
             responses = @ApiResponse(responseCode = "200",

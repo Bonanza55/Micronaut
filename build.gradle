@@ -29,9 +29,11 @@ dependencies {
     implementation("io.micronaut:micronaut-validation")
     implementation("com.googlecode.json-simple:json-simple:1.1.1")
     implementation("org.postgresql:postgresql:42.2.9")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.0.1")
     runtimeOnly("ch.qos.logback:logback-classic")
     annotationProcessor("io.micronaut:micronaut-graal")
     compileOnly("org.graalvm.nativeimage:svm")
+
 }
 
 application {

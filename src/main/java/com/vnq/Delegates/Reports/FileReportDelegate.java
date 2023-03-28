@@ -1,7 +1,7 @@
-package com.vnq.Delegates;
+package com.vnq.Delegates.Reports;
 
 import com.vnq.Constants.GlobalConstants;
-import com.vnq.DataTransferObject.ReportRequest;
+import com.vnq.DTO.Request.ReportRequest;
 import com.vnq.Dbms.Sql;
 import com.vnq.Dbms.SqlProperties;
 
