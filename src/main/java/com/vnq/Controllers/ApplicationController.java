@@ -22,7 +22,6 @@ public class ApplicationController {
     private static final String HEADER_X_LOCALE = "en-US";
     public WebReportDelegate webReportDelegate = new WebReportDelegate();
     public FileReportDelegate fileReportDelegate = new FileReportDelegate();
-
     public CustomersDelegate customersDelegate = new CustomersDelegate();
 
     // JSON report API.
