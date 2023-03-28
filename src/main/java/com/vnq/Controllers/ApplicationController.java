@@ -2,6 +2,7 @@ package com.vnq.Controllers;
 
 import com.vnq.DTO.Request.ReportRequest;
 import com.vnq.Delegates.Customers.CustomersDelegate;
+import com.vnq.Delegates.Items.ItemsDelegate;
 import com.vnq.Delegates.Reports.WebReportDelegate;
 import com.vnq.Delegates.Reports.FileReportDelegate;
 import io.micronaut.http.MediaType;
@@ -23,6 +24,7 @@ public class ApplicationController {
     public WebReportDelegate webReportDelegate = new WebReportDelegate();
     public FileReportDelegate fileReportDelegate = new FileReportDelegate();
     public CustomersDelegate customersDelegate = new CustomersDelegate();
+    public ItemsDelegate itemsDelegate = new ItemsDelegate();
 
     // JSON report API.
     @Operation(summary = "Run Dynamic JSON Report",
@@ -49,6 +51,13 @@ public class ApplicationController {
             responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
     @Post(uri = "/viewCustomers/")
     public String ViewCustomers() { return customersDelegate.viewCustomers(); }
+
+    // Items Report API
+    @Operation(summary = "View Items Report",
+            description = "Call the DB and return all items",
+            responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
+    @Post(uri = "/viewItems/")
+    public String ViewItems() { return itemsDelegate.viewItems(); }
 
     @Operation(summary = "Run DB Report",
             description = "Take in a report name and return rows",
