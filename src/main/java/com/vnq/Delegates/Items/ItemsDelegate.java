@@ -3,6 +3,7 @@ package com.vnq.Delegates.Items;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vnq.Constants.GlobalConstants;
+import com.vnq.DTO.Request.UpdatePriceRequest;
 import com.vnq.DTO.Response.ItemsResponse;
 import com.vnq.DTO.Response.ReportHeader;
 import com.vnq.DTO.Response.ReportTrailer;
@@ -19,6 +20,27 @@ public class ItemsDelegate {
 
     String ITEMS = "Items";
     SqlProperties sqlProperties = new SqlProperties();
+
+    public String updatePrice(UpdatePriceRequest updatePriceRequest) {
+
+        // OPEN-DB-CONNECTION
+        sqlProperties.getSqlProperties();
+        Sql db = new Sql(sqlProperties.driver, sqlProperties.uid, sqlProperties.server);
+
+        String   sqlStm = "update public.Item";
+        sqlStm = sqlStm + " set ItemPrice = " + updatePriceRequest.NewPrice;
+        sqlStm = sqlStm + " where ItemID = "  + updatePriceRequest.ItemID;
+
+        // GET-RESULTS
+        if (db.update(sqlStm) != GlobalConstants.UPDATE_FAIL) {
+            db.commit();
+            db.close();
+            return GlobalConstants.DB_OPERATION_SUCCESS;
+        } else {
+            db.close();
+            return GlobalConstants.DB_OPERATION_ERROR;
+        }
+    }
 
     public String viewItems() {
 
@@ -49,7 +71,6 @@ public class ItemsDelegate {
 
         // GET-RESULTS
         try {
-            int j = 0;
             int rowCount = 0;
             ResultSet sqlRs = db.query(db.getSqlCmd(ITEMS));
             while (sqlRs.next()) {
@@ -57,22 +78,18 @@ public class ItemsDelegate {
                 itemsResponse.ItemPrice = sqlRs.getString(2).trim();
                 itemsResponse.TaxRate = sqlRs.getString(3).trim();
                 itemsResponse.Sale = sqlRs.getString(4).trim();
-                itemsResponse.ItemDesc = sqlRs.getString(5).trim();
+                itemsResponse.Discount = sqlRs.getString(5).trim();
                 itemsResponse.SalesPrice = sqlRs.getString(6).trim();
                 itemsResponse.ItemDesc = sqlRs.getString(7).trim();
                 itemsResponseList.add(itemsResponse);
                 itemsResponse = new ItemsResponse();
-                if (j++ == 5000) {
-                    db.commit();
-                    j = 0;
-                }
                 rowCount++;
             }
             db.commit();
             db.close();
             reportTrailer.RowCount = String.valueOf(rowCount);
         } catch (SQLException ex4) {
-            return GlobalConstants.DB_FETCH_ERROR;
+            return GlobalConstants.DB_OPERATION_ERROR;
         }
         try {
             response.add(objectMapper.writeValueAsString(reportHeader));

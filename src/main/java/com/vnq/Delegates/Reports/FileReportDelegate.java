@@ -77,7 +77,7 @@ public class FileReportDelegate {
                 db.close();
                 fw.write("\n***** Returned: " + totalRows + " Rows *****\n");
             } catch (SQLException ex4) {
-                return GlobalConstants.DB_FETCH_ERROR;
+                return GlobalConstants.DB_OPERATION_ERROR;
             }
             fw.flush();
         } catch (IOException e) {

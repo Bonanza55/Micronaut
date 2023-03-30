@@ -1,10 +1,13 @@
 package com.vnq.Controllers;
 
 import com.vnq.DTO.Request.ReportRequest;
+import com.vnq.DTO.Request.UpdatePriceRequest;
+import com.vnq.DTO.Request.ViewOrderRequest;
 import com.vnq.Delegates.Customers.CustomersDelegate;
 import com.vnq.Delegates.Items.ItemsDelegate;
-import com.vnq.Delegates.Reports.WebReportDelegate;
+import com.vnq.Delegates.Orders.OrdersDelegate;
 import com.vnq.Delegates.Reports.FileReportDelegate;
+import com.vnq.Delegates.Reports.WebReportDelegate;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -25,6 +28,7 @@ public class ApplicationController {
     public FileReportDelegate fileReportDelegate = new FileReportDelegate();
     public CustomersDelegate customersDelegate = new CustomersDelegate();
     public ItemsDelegate itemsDelegate = new ItemsDelegate();
+    public OrdersDelegate ordersDelegate = new OrdersDelegate();
 
     // JSON report API.
     @Operation(summary = "Run Dynamic JSON Report",
@@ -59,6 +63,27 @@ public class ApplicationController {
     @Post(uri = "/viewItems/")
     public String ViewItems() { return itemsDelegate.viewItems(); }
 
+    // Update Item Price
+    @Operation(summary = "Update Item Price",
+            description = "Call the DB and Update Item Price",
+            requestBody = @RequestBody(description = "Update Item Request",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = UpdatePriceRequest.class))),
+            responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
+    @Post(uri = "/updateItemPrice/")
+    public String UpdateItemPrice(@Body UpdatePriceRequest updatePriceRequest) { return itemsDelegate.updatePrice(updatePriceRequest); }
+
+    // View Order
+    @Operation(summary = "View Customer Order",
+            description = "Call the DB and View Order",
+            requestBody = @RequestBody(description = "View Order Request",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = ViewOrderRequest.class))),
+            responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
+    @Post(uri = "/viewOrder/")
+    public String UpdateItemPrice(@Body ViewOrderRequest viewOrderRequest) { return ordersDelegate.viewOrder(viewOrderRequest); }
+
+    // Run table report
     @Operation(summary = "Run DB Report",
             description = "Take in a report name and return rows",
             parameters = {

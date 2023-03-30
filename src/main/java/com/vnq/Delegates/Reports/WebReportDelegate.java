@@ -39,7 +39,6 @@ public class WebReportDelegate {
             ResultSet sqlRs = db.query(sqlTDL);
             ResultSetMetaData rsmd = sqlRs.getMetaData();
             int cc = rsmd.getColumnCount();
-            int j = 0;
             int rowCount = 0;
             String dataElement;
             JSONArray details = new JSONArray();
@@ -50,11 +49,6 @@ public class WebReportDelegate {
                 for (int i = 1; i <= cc; i++) {
                     dataElement = sqlRs.getString(i).trim();
                     fieldObj.put(rsmd.getColumnName(i), dataElement);
-                }
-                j++;
-                if (j == 5000) {
-                    db.commit();
-                    j = 0;
                 }
                 fieldA.add(fieldObj);
                 details.add(fieldA);
@@ -68,7 +62,7 @@ public class WebReportDelegate {
             db.commit();
             db.close();
         } catch (SQLException ex4) {
-            return GlobalConstants.DB_FETCH_ERROR;
+            return GlobalConstants.DB_OPERATION_ERROR;
         }
         return jsonString;
     }

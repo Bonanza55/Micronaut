@@ -1,6 +1,8 @@
 package com.vnq.DTO.Request;
 
+import java.math.BigDecimal;
+
 public class UpdatePriceRequest {
-    public String ItemId;
-    public String NewPrice;
+    public int ItemID;
+    public BigDecimal NewPrice;
 }

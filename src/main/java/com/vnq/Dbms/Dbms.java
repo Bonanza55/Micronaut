@@ -64,6 +64,17 @@ abstract class Dbms {
         return rs;
     }
 
+    public int update(String statement) {
+        int retVal = 0;
+        try {
+            retVal = stm.executeUpdate(statement);
+        } catch(SQLException ex4){
+            retVal = GlobalConstants.UPDATE_FAIL;
+        }
+        return(retVal);
+    }
+
+
     public void commit() {
         try {
             con.commit();

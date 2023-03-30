@@ -49,7 +49,6 @@ public class CustomersDelegate {
 
         // GET-RESULTS
         try {
-            int j = 0;
             int rowCount = 0;
             ResultSet sqlRs = db.query(db.getSqlCmd(CUSTOMERS));
             while (sqlRs.next()) {
@@ -60,17 +59,13 @@ public class CustomersDelegate {
                 customersResponse.City = sqlRs.getString(5).trim();
                 customersResponseList.add(customersResponse);
                 customersResponse = new CustomersResponse();
-                if (j++ == 5000) {
-                    db.commit();
-                    j = 0;
-                }
                 rowCount++;
             }
             db.commit();
             db.close();
             reportTrailer.RowCount = String.valueOf(rowCount);
         } catch (SQLException ex4) {
-            return GlobalConstants.DB_FETCH_ERROR;
+            return GlobalConstants.DB_OPERATION_ERROR;
         }
         try {
             response.add(objectMapper.writeValueAsString(reportHeader));
