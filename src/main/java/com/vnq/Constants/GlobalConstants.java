@@ -8,4 +8,5 @@ public class GlobalConstants {
     public final static String REPORT_RUN_FAIL = "***** REPORT RUN FAIL *****";
     public final static String JSON_PARSE_ERROR = "***** JSON PARSE ERROR *****";
     public final static int UPDATE_FAIL = -100;
+    public final static int  INSERT_FAIL = -100;
 }

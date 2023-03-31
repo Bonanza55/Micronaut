@@ -1,9 +1,9 @@
-package com.vnq.Delegates.Customers;
+package com.vnq.Delegates.Items;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vnq.Constants.GlobalConstants;
-import com.vnq.DTO.Response.CustomersResponse;
+import com.vnq.DTO.Response.ItemsResponse;
 import com.vnq.DTO.Response.ReportHeader;
 import com.vnq.DTO.Response.ReportTrailer;
 import com.vnq.Dbms.Sql;
@@ -15,12 +15,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class CustomersDelegate {
+public class ViewItems {
 
-    String CUSTOMERS = "Customers";
+    String ITEMS = "Items";
     SqlProperties sqlProperties = new SqlProperties();
 
-    public String viewCustomers() {
+    public String viewItems() {
 
         // GET-TIMESTAMP
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
@@ -29,15 +29,15 @@ public class CustomersDelegate {
         ObjectMapper objectMapper = new ObjectMapper();
 
         // DELEGATE-RESPONSE
-        CustomersResponse customersResponse = new CustomersResponse();
-        ArrayList<CustomersResponse> customersResponseList = new ArrayList<>();
+        ItemsResponse itemsResponse = new ItemsResponse();
+        ArrayList<ItemsResponse> itemsResponseList = new ArrayList<>();
 
         // THE_RESPONSE-FORMATTED
         ArrayList<String> response = new ArrayList<>();
 
         // GET-REPORT-HEADER
         ReportHeader reportHeader = new ReportHeader();
-        reportHeader.ReportName = CUSTOMERS;
+        reportHeader.ReportName = ITEMS;
         reportHeader.ReportDate = timeStamp;
 
         // GET-REPORT-TRAILER
@@ -50,15 +50,17 @@ public class CustomersDelegate {
         // GET-RESULTS
         try {
             int rowCount = 0;
-            ResultSet sqlRs = db.query(db.getSqlCmd(CUSTOMERS));
+            ResultSet sqlRs = db.query(db.getSqlCmd(ITEMS));
             while (sqlRs.next()) {
-                customersResponse.CustomerID = sqlRs.getString(1).trim();
-                customersResponse.LastName = sqlRs.getString(2).trim();
-                customersResponse.FirstName = sqlRs.getString(3).trim();
-                customersResponse.Address = sqlRs.getString(4).trim();
-                customersResponse.City = sqlRs.getString(5).trim();
-                customersResponseList.add(customersResponse);
-                customersResponse = new CustomersResponse();
+                itemsResponse.ItemID = sqlRs.getString(1).trim();
+                itemsResponse.ItemPrice = sqlRs.getString(2).trim();
+                itemsResponse.TaxRate = sqlRs.getString(3).trim();
+                itemsResponse.Sale = sqlRs.getString(4).trim();
+                itemsResponse.Discount = sqlRs.getString(5).trim();
+                itemsResponse.SalesPrice = sqlRs.getString(6).trim();
+                itemsResponse.ItemDesc = sqlRs.getString(7).trim();
+                itemsResponseList.add(itemsResponse);
+                itemsResponse = new ItemsResponse();
                 rowCount++;
             }
             db.commit();
@@ -69,7 +71,7 @@ public class CustomersDelegate {
         }
         try {
             response.add(objectMapper.writeValueAsString(reportHeader));
-            response.add(objectMapper.writeValueAsString(customersResponseList));
+            response.add(objectMapper.writeValueAsString(itemsResponseList));
             response.add(objectMapper.writeValueAsString(reportTrailer));
             return response.toString();
         } catch (JsonProcessingException ex4) {

@@ -3,25 +3,25 @@ package com.vnq.Delegates.Orders;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vnq.Constants.GlobalConstants;
-import com.vnq.DTO.Request.ViewOrderRequest;
-import com.vnq.DTO.Response.OrderSummary;
 import com.vnq.DTO.Response.OrderItemSummary;
+import com.vnq.DTO.Response.OrderSummary;
 import com.vnq.DTO.Response.ReportHeader;
 import com.vnq.Dbms.Sql;
 import com.vnq.Dbms.SqlProperties;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class OrdersDelegate {
+public class ViewOrder {
 
     String ORDER = "Order Summary";
     SqlProperties sqlProperties = new SqlProperties();
 
-    public String viewOrder(ViewOrderRequest viewOrderRequest) {
+    public String viewOrder(BigDecimal OrderID) {
 
         // GET-TIMESTAMP
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
@@ -62,7 +62,7 @@ public class OrdersDelegate {
         sqlStm = sqlStm + "        sum(I.ItemPrice*OI.Quantity)*I.TaxRate,";
         sqlStm = sqlStm + "        sum(I.ItemPrice*OI.Quantity)*I.TaxRate+sum(I.ItemPrice*OI.quantity)";
         sqlStm = sqlStm + "  from public.Order O, public.OrderItem OI, public.Customer C, public.Item I";
-        sqlStm = sqlStm + " where O.OrderID = " + viewOrderRequest.OrderID;
+        sqlStm = sqlStm + " where O.OrderID = " + OrderID;
         sqlStm = sqlStm + "   and O.OrderID = OI.OrderID";
         sqlStm = sqlStm + "   and I.ItemID  = OI.ItemID";
         sqlStm = sqlStm + "   and C.CustomerID  = O.CustomerID";
