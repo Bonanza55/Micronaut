@@ -2,11 +2,9 @@ package com.vnq.Controllers;
 
 import com.vnq.DTO.Request.*;
 import com.vnq.Delegates.Customers.ViewCustomers;
-import com.vnq.Delegates.Items.AddItem;
+import com.vnq.Delegates.Orders.*;
 import com.vnq.Delegates.Items.UpdatePrice;
 import com.vnq.Delegates.Items.ViewItems;
-import com.vnq.Delegates.Orders.NewOrder;
-import com.vnq.Delegates.Orders.ViewOrder;
 import com.vnq.Delegates.Reports.FileReportDelegate;
 import com.vnq.Delegates.Reports.WebReportDelegate;
 import io.micronaut.http.MediaType;
@@ -31,45 +29,12 @@ public class ApplicationController {
     public ViewItems viewItems = new ViewItems();
     public UpdatePrice updatePrice = new UpdatePrice();
     public ViewOrder viewOrder = new ViewOrder();
+    public ViewOrderItems viewOrderItems = new ViewOrderItems();
     public NewOrder newOrder = new NewOrder();
     public AddItem addItem = new AddItem();
+    public ClearOrder clearOrder = new ClearOrder();
+    public DeleteItemOrder deleteItemOrder = new DeleteItemOrder();
 
-    // JSON report API.
-    @Operation(summary = "Run Dynamic JSON Report",
-            description = "Take in a report name and return json",
-            parameters = {
-                    @Parameter(name = HEADER_X_LOCALE,
-                            in = ParameterIn.HEADER,
-                            schema = @Schema(type = "string"),
-                            example = "en-US")
-            },
-            requestBody = @RequestBody(description = "Report request name",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ReportRequest.class))),
-            responses = @ApiResponse(responseCode = "200",
-                    content = @Content(mediaType = MediaType.ALL)))
-    @Post(uri = "/RunWebReport/")
-    public String RunWebReport(@Body ReportRequest reportRequest) {
-        return webReportDelegate.view(reportRequest);
-    }
-
-    // Customers Report API
-    @Operation(summary = "View Customers Report",
-            description = "Call the DB and return all customers",
-            responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
-    @Post(uri = "/viewCustomers/")
-    public String ViewCustomers() {
-        return viewCustomers.viewCustomers();
-    }
-
-    // Items Report API
-    @Operation(summary = "View Items Report",
-            description = "Call the DB and return all items",
-            responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
-    @Post(uri = "/viewItems/")
-    public String ViewItems() {
-        return viewItems.viewItems();
-    }
 
     // Create New Order
     @Operation(summary = "Create New Order",
@@ -107,6 +72,18 @@ public class ApplicationController {
         return updatePrice.updatePrice(updatePriceRequest);
     }
 
+    // View Order Items
+    @Operation(summary = "View Customer Order Items",
+            description = "Call the DB and View Order Items",
+            requestBody = @RequestBody(description = "View Order Request",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = ViewOrderRequest.class))),
+            responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
+    @Post(uri = "/viewOrderItems/")
+    public String ViewOrderItems(@Body ViewOrderRequest viewOrderRequest) {
+        return viewOrderItems.viewOrderItems(viewOrderRequest.OrderID);
+    }
+
     // View Order
     @Operation(summary = "View Customer Order",
             description = "Call the DB and View Order",
@@ -115,8 +92,70 @@ public class ApplicationController {
                             schema = @Schema(implementation = ViewOrderRequest.class))),
             responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
     @Post(uri = "/viewOrder/")
-    public String UpdateItemPrice(@Body ViewOrderRequest viewOrderRequest) {
+    public String ViewOrder(@Body ViewOrderRequest viewOrderRequest) {
         return viewOrder.viewOrder(viewOrderRequest.OrderID);
+    }
+
+    // Delete Order Item
+    @Operation(summary = "Delete Customer Order Item",
+            description = "Call the DB and Delete Order Item",
+            requestBody = @RequestBody(description = "Delete Order Item Request",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = DeleteOrderItemRequest.class))),
+            responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
+    @Post(uri = "/deleteOrderItem/")
+    public String ClearOrder(@Body DeleteOrderItemRequest deleteOrderItemRequest) {
+        return deleteItemOrder.deleteOrderItem(deleteOrderItemRequest.OrderID,deleteOrderItemRequest.Identity);
+    }
+
+
+    // Clear Order
+    @Operation(summary = "Clear Customer Order",
+            description = "Call the DB and Clear Order",
+            requestBody = @RequestBody(description = "Clear Order Request",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = ClearOrderRequest.class))),
+            responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
+    @Post(uri = "/clearOrder/")
+    public String ClearOrder(@Body ClearOrderRequest clearOrderRequest) {
+        return clearOrder.clearOrder(clearOrderRequest.OrderID);
+    }
+
+    // JSON report API.
+    @Operation(summary = "Run Dynamic JSON Report",
+            description = "Take in a report name and return json",
+            parameters = {
+                    @Parameter(name = HEADER_X_LOCALE,
+                            in = ParameterIn.HEADER,
+                            schema = @Schema(type = "string"),
+                            example = "en-US")
+            },
+            requestBody = @RequestBody(description = "Report request name",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = ReportRequest.class))),
+            responses = @ApiResponse(responseCode = "200",
+                    content = @Content(mediaType = MediaType.ALL)))
+    @Post(uri = "/RunWebReport/")
+    public String RunWebReport(@Body ReportRequest reportRequest) {
+        return webReportDelegate.view(reportRequest);
+    }
+
+    // Customers Report API
+    @Operation(summary = "View Customers Report",
+            description = "Call the DB and return all customers",
+            responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
+    @Post(uri = "/viewCustomers/")
+    public String ViewCustomers() {
+        return viewCustomers.viewCustomers();
+    }
+
+    // Items Report API
+    @Operation(summary = "View Items Report",
+            description = "Call the DB and return all items",
+            responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
+    @Post(uri = "/viewItems/")
+    public String ViewItems() {
+        return viewItems.viewItems();
     }
 
     // Run table report

@@ -1,10 +1,10 @@
-package com.vnq.Delegates.Items;
+package com.vnq.Delegates.Orders;
 
 import com.vnq.Constants.GlobalConstants;
 import com.vnq.DTO.Request.AddItemRequest;
 import com.vnq.Dbms.Sql;
 import com.vnq.Dbms.SqlProperties;
-import com.vnq.Delegates.Orders.ViewOrder;
+import com.vnq.DTO.Request.SqlStatementBuilder;
 
 public class AddItem {
     SqlProperties sqlProperties = new SqlProperties();
@@ -15,13 +15,13 @@ public class AddItem {
         sqlProperties.getSqlProperties();
         Sql db = new Sql(sqlProperties.driver, sqlProperties.uid, sqlProperties.server);
 
-        String sqlStm = "insert into public.OrderItem (OrderID,ItemID,Quantity) values(";
-        sqlStm = sqlStm + addItemRequest.OrderID  + ",";
-        sqlStm = sqlStm + addItemRequest.ItemID   + ",";
-        sqlStm = sqlStm + addItemRequest.Quantity + ")";
+        // BUILD SQL
+        SqlStatementBuilder sqlStatementBuilder = new SqlStatementBuilder();
 
         // GET-RESULTS
-        if (db.update(sqlStm) != GlobalConstants.INSERT_FAIL) {
+        if (db.update(sqlStatementBuilder.addItem(addItemRequest.OrderID,
+                addItemRequest.ItemID,
+                addItemRequest.Quantity)) != GlobalConstants.INSERT_FAIL) {
             db.commit();
             db.close();
             return viewOrder.viewOrder(addItemRequest.OrderID);

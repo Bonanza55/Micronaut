@@ -8,6 +8,7 @@ import com.vnq.DTO.Response.OrderSummary;
 import com.vnq.DTO.Response.ReportHeader;
 import com.vnq.Dbms.Sql;
 import com.vnq.Dbms.SqlProperties;
+import com.vnq.DTO.Request.SqlStatementBuilder;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -49,41 +50,26 @@ public class ViewOrder {
         sqlProperties.getSqlProperties();
         Sql db = new Sql(sqlProperties.driver, sqlProperties.uid, sqlProperties.server);
 
-        String   sqlStm = " select distinct O.OrderID,";
-        sqlStm = sqlStm + "        OI.ItemID,";
-        sqlStm = sqlStm + "        I.ItemPrice,";
-        sqlStm = sqlStm + "        sum(OI.Quantity),";
-        sqlStm = sqlStm + "        C.CustomerID,";
-        sqlStm = sqlStm + "        C.LastName,";
-        sqlStm = sqlStm + "        C.FirstName,";
-        sqlStm = sqlStm + "        O.SalesDate,";
-        sqlStm = sqlStm + "        O.SalesTime,";
-        sqlStm = sqlStm + "        sum(I.ItemPrice*OI.Quantity),";
-        sqlStm = sqlStm + "        sum(I.ItemPrice*OI.Quantity)*I.TaxRate,";
-        sqlStm = sqlStm + "        sum(I.ItemPrice*OI.Quantity)*I.TaxRate+sum(I.ItemPrice*OI.quantity)";
-        sqlStm = sqlStm + "  from public.Order O, public.OrderItem OI, public.Customer C, public.Item I";
-        sqlStm = sqlStm + " where O.OrderID = " + OrderID;
-        sqlStm = sqlStm + "   and O.OrderID = OI.OrderID";
-        sqlStm = sqlStm + "   and I.ItemID  = OI.ItemID";
-        sqlStm = sqlStm + "   and C.CustomerID  = O.CustomerID";
-        sqlStm = sqlStm + " group by O.OrderID,OI.OrderID,OI.ItemID,I.ItemPrice,OI.Quantity,C.CustomerID,C.LastName,C.FirstName,O.SalesDate,O.SalesTime,I.TaxRate";
+        // BUILD-SQL
+        SqlStatementBuilder sqlStatementBuilder = new SqlStatementBuilder();
 
         // GET-RESULTS
         try {
-            ResultSet sqlRs = db.query(sqlStm);
+            ResultSet sqlRs = db.query(sqlStatementBuilder.viewOrder(OrderID));
             while (sqlRs.next()) {
                 orderSummary.OrderID = sqlRs.getString(1).trim();
                 orderItemSummary.ItemID = sqlRs.getString(2).trim();
-                orderItemSummary.ItemPrice = sqlRs.getString(3).trim();
-                orderItemSummary.Quantity = sqlRs.getString(4).trim();
-                orderSummary.CustomerID = sqlRs.getString(5).trim();
-                orderSummary.LastName = sqlRs.getString(6).trim();
-                orderSummary.FirstName = sqlRs.getString(7).trim();
-                orderSummary.SalesDate = sqlRs.getString(8).trim();
-                orderSummary.SalesTime = sqlRs.getString(9).trim();
-                orderItemSummary.ItemSubTotal = sqlRs.getString(10).trim();
-                orderItemSummary.ItemTotalTax = sqlRs.getString(11).trim();
-                orderItemSummary.ItemTotal = sqlRs.getString(12).trim();
+                orderItemSummary.ItemDesc = sqlRs.getString(3).trim();
+                orderItemSummary.ItemPrice = sqlRs.getString(4).trim();
+                orderItemSummary.Quantity = sqlRs.getString(5).trim();
+                orderSummary.CustomerID = sqlRs.getString(6).trim();
+                orderSummary.LastName = sqlRs.getString(7).trim();
+                orderSummary.FirstName = sqlRs.getString(8).trim();
+                orderSummary.SalesDate = sqlRs.getString(9).trim();
+                orderSummary.SalesTime = sqlRs.getString(10).trim();
+                orderItemSummary.ItemSubTotal = sqlRs.getString(11).trim();
+                orderItemSummary.ItemTotalTax = sqlRs.getString(12).trim();
+                orderItemSummary.ItemTotal = sqlRs.getString(13).trim();
                 OrderTotal += Double.parseDouble(orderItemSummary.ItemTotal);
                 orderItemSummaryList.add(orderItemSummary);
                 orderItemSummary = new OrderItemSummary();

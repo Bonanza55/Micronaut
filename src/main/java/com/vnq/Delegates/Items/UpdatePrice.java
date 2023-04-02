@@ -1,6 +1,7 @@
 package com.vnq.Delegates.Items;
 
 import com.vnq.Constants.GlobalConstants;
+import com.vnq.DTO.Request.SqlStatementBuilder;
 import com.vnq.DTO.Request.UpdatePriceRequest;
 import com.vnq.Dbms.Sql;
 import com.vnq.Dbms.SqlProperties;
@@ -16,12 +17,11 @@ public class UpdatePrice {
         sqlProperties.getSqlProperties();
         Sql db = new Sql(sqlProperties.driver, sqlProperties.uid, sqlProperties.server);
 
-        String sqlStm = "update public.Item";
-        sqlStm = sqlStm + " set ItemPrice = " + updatePriceRequest.NewPrice;
-        sqlStm = sqlStm + " where ItemID = " + updatePriceRequest.ItemID;
+        // BUILD-SQL
+        SqlStatementBuilder sqlStatementBuilder = new SqlStatementBuilder();
 
         // GET-RESULTS
-        if (db.update(sqlStm) != GlobalConstants.UPDATE_FAIL) {
+        if (db.update(sqlStatementBuilder.updatePrice(updatePriceRequest.NewPrice,updatePriceRequest.ItemID)) != GlobalConstants.UPDATE_FAIL) {
             db.commit();
             db.close();
             return GlobalConstants.DB_OPERATION_SUCCESS;
