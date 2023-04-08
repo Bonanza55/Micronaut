@@ -3,7 +3,7 @@ package com.vnq.Delegates.Items;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vnq.Constants.GlobalConstants;
-import com.vnq.DTO.Response.ItemsResponse;
+import com.vnq.DTO.Response.ItemResponse;
 import com.vnq.DTO.Response.ReportHeader;
 import com.vnq.DTO.Response.ReportTrailer;
 import com.vnq.Dbms.Sql;
@@ -29,8 +29,8 @@ public class ViewItems {
         ObjectMapper objectMapper = new ObjectMapper();
 
         // DELEGATE-RESPONSE
-        ItemsResponse itemsResponse = new ItemsResponse();
-        ArrayList<ItemsResponse> itemsResponseList = new ArrayList<>();
+        ItemResponse itemResponse = new ItemResponse();
+        ArrayList<ItemResponse> itemResponseList = new ArrayList<>();
 
         // THE_RESPONSE-FORMATTED
         ArrayList<String> response = new ArrayList<>();
@@ -52,15 +52,15 @@ public class ViewItems {
             int rowCount = 0;
             ResultSet sqlRs = db.query(db.getSqlCmd(ITEMS));
             while (sqlRs.next()) {
-                itemsResponse.ItemID = sqlRs.getString(1).trim();
-                itemsResponse.ItemPrice = sqlRs.getString(2).trim();
-                itemsResponse.TaxRate = sqlRs.getString(3).trim();
-                itemsResponse.Sale = sqlRs.getString(4).trim();
-                itemsResponse.Discount = sqlRs.getString(5).trim();
-                itemsResponse.SalesPrice = sqlRs.getString(6).trim();
-                itemsResponse.ItemDesc = sqlRs.getString(7).trim();
-                itemsResponseList.add(itemsResponse);
-                itemsResponse = new ItemsResponse();
+                itemResponse.ItemID = sqlRs.getString(1).trim();
+                itemResponse.ItemPrice = sqlRs.getString(2).trim();
+                itemResponse.TaxRate = sqlRs.getString(3).trim();
+                itemResponse.Sale = sqlRs.getString(4).trim();
+                itemResponse.Discount = sqlRs.getString(5).trim();
+                itemResponse.SalesPrice = sqlRs.getString(6).trim();
+                itemResponse.ItemDesc = sqlRs.getString(7).trim();
+                itemResponseList.add(itemResponse);
+                itemResponse = new ItemResponse();
                 rowCount++;
             }
             db.commit();
@@ -71,7 +71,7 @@ public class ViewItems {
         }
         try {
             response.add(objectMapper.writeValueAsString(reportHeader));
-            response.add(objectMapper.writeValueAsString(itemsResponseList));
+            response.add(objectMapper.writeValueAsString(itemResponseList));
             response.add(objectMapper.writeValueAsString(reportTrailer));
             return response.toString();
         } catch (JsonProcessingException ex4) {

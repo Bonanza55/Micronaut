@@ -1,7 +1,9 @@
 package com.vnq.Controllers;
 
 import com.vnq.DTO.Request.*;
+import com.vnq.Delegates.Customers.LookupCustomer;
 import com.vnq.Delegates.Customers.ViewCustomers;
+import com.vnq.Delegates.Items.LookupItem;
 import com.vnq.Delegates.Orders.*;
 import com.vnq.Delegates.Items.UpdatePrice;
 import com.vnq.Delegates.Items.ViewItems;
@@ -34,6 +36,8 @@ public class ApplicationController {
     public AddItem addItem = new AddItem();
     public ClearOrder clearOrder = new ClearOrder();
     public DeleteItemOrder deleteItemOrder = new DeleteItemOrder();
+    public LookupItem lookupItem = new LookupItem();
+    public LookupCustomer lookupCustomer = new LookupCustomer();
 
 
     // Create New Order
@@ -56,7 +60,7 @@ public class ApplicationController {
                             schema = @Schema(implementation = AddItem.class))),
             responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
     @Post(uri = "/addItem/")
-    public String NewOrder(@Body AddItemRequest addItemRequest) {
+    public String AddItem(@Body AddItemRequest addItemRequest) {
         return addItem.addItem(addItemRequest);
     }
 
@@ -108,6 +112,29 @@ public class ApplicationController {
         return deleteItemOrder.deleteOrderItem(deleteOrderItemRequest.OrderID,deleteOrderItemRequest.Identity);
     }
 
+    // Lookup Customer
+    @Operation(summary = "View Customer",
+            description = "Call the DB and View Customer",
+            requestBody = @RequestBody(description = "View Customer Request",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = LookupCustomerRequest.class))),
+            responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
+    @Post(uri = "/lookupCustomer/")
+    public String LookupCustomer(@Body LookupCustomerRequest lookupCustomerRequest) {
+        return lookupCustomer.lookupCustomer(lookupCustomerRequest.CustomerID);
+    }
+
+    // Lookup Item
+    @Operation(summary = "View Item",
+            description = "Call the DB and View Item",
+            requestBody = @RequestBody(description = "View Item Request",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = ViewItemRequest.class))),
+            responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
+    @Post(uri = "/lookupItem/")
+    public String ViewItem(@Body ViewItemRequest viewItemRequest) {
+        return lookupItem.viewItem(viewItemRequest.ItemID);
+    }
 
     // Clear Order
     @Operation(summary = "Clear Customer Order",

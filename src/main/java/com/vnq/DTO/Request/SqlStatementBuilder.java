@@ -14,7 +14,19 @@ public class SqlStatementBuilder {
                 + newOrderRequest.Location + ")";
     }
 
-    public String viewItems(BigDecimal ItemID) {
+    public String viewCustomer(BigDecimal CustomerID) {
+
+        return "select distinct C.CustomerID,"
+                + "        C.LastName,"
+                + "        C.FirstName,"
+                + "        C.Address,"
+                + "        C.City"
+                + "  from public.Customer C"
+                + " where C.CustomerID = " + CustomerID;
+    }
+
+
+    public String viewItem(BigDecimal ItemID) {
 
         return "select distinct I.ItemID,"
                 + "        I.ItemDesc,"
