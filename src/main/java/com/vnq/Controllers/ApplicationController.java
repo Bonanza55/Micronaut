@@ -4,9 +4,9 @@ import com.vnq.DTO.Request.*;
 import com.vnq.Delegates.Customers.LookupCustomer;
 import com.vnq.Delegates.Customers.ViewCustomers;
 import com.vnq.Delegates.Items.LookupItem;
-import com.vnq.Delegates.Orders.*;
 import com.vnq.Delegates.Items.UpdatePrice;
 import com.vnq.Delegates.Items.ViewItems;
+import com.vnq.Delegates.Orders.*;
 import com.vnq.Delegates.Reports.FileReportDelegate;
 import com.vnq.Delegates.Reports.WebReportDelegate;
 import io.micronaut.http.MediaType;
@@ -48,9 +48,7 @@ public class ApplicationController {
                             schema = @Schema(implementation = NewOrderRequest.class))),
             responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
     @Post(uri = "/newOrder/")
-    public String NewOrder(@Body NewOrderRequest newOrderRequest) {
-        return newOrder.newOrder(newOrderRequest);
-    }
+    public String NewOrder(@Body NewOrderRequest newOrderRequest) { return newOrder.newOrder(newOrderRequest); }
 
     // Add Item To Order
     @Operation(summary = "Add Item To Order",
@@ -109,7 +107,7 @@ public class ApplicationController {
             responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
     @Post(uri = "/deleteOrderItem/")
     public String ClearOrder(@Body DeleteOrderItemRequest deleteOrderItemRequest) {
-        return deleteItemOrder.deleteOrderItem(deleteOrderItemRequest.OrderID,deleteOrderItemRequest.Identity);
+        return deleteItemOrder.deleteOrderItem(deleteOrderItemRequest.OrderID, deleteOrderItemRequest.Identity);
     }
 
     // Lookup Customer
