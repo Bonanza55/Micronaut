@@ -42,6 +42,7 @@ public class SqlStatementBuilder {
     public String viewOrderItems(BigDecimal OrderID) {
 
         return "select distinct O.OrderID,"
+                + "        I.ItemID,"
                 + "        I.ItemDesc,"
                 + "        OI.Identity,"
                 + "        OI.Quantity"
@@ -49,7 +50,7 @@ public class SqlStatementBuilder {
                 + " where O.OrderID = " + OrderID
                 + "   and O.OrderID = OI.OrderID"
                 + "   and I.ItemID  = OI.ItemID"
-                + " group by O.OrderID,I.ItemDesc,OI.Identity,OI.Quantity";
+                + " group by O.OrderID,I.ItemID,OI.Identity,OI.Quantity";
     }
 
     public String viewOrder(BigDecimal OrderID) {
