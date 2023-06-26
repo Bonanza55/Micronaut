@@ -19,7 +19,7 @@ public class DeleteItemOrder {
 
         // BUILD-SQL
         SqlStatementBuilder sqlStatementBuilder = new SqlStatementBuilder();
-        // GET-RESULTS
+        // GET-RESULT
         if (db.update(sqlStatementBuilder.deleteOrderItem(OrderID,Identity)) != GlobalConstants.INSERT_FAIL) {
             db.commit();
             db.close();
