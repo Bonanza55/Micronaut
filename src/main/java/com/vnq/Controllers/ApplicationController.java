@@ -29,6 +29,7 @@ public class ApplicationController {
     public FileReportDelegate fileReportDelegate = new FileReportDelegate();
     public ViewCustomers viewCustomers = new ViewCustomers();
     public ViewItems viewItems = new ViewItems();
+    public GetOrders getOrders = new GetOrders();
     public UpdatePrice updatePrice = new UpdatePrice();
     public ViewOrder viewOrder = new ViewOrder();
     public ViewOrderItems viewOrderItems = new ViewOrderItems();
@@ -96,6 +97,15 @@ public class ApplicationController {
     @Post(uri = "/viewOrder/")
     public String ViewOrder(@Body ViewOrderRequest viewOrderRequest) {
         return viewOrder.viewOrder(viewOrderRequest.OrderID);
+    }
+
+    // View Order List
+    @Operation(summary = "View Order List",
+            description = "Call the DB and View Order List",
+            responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = MediaType.ALL)))
+    @Post(uri = "/getOrders/")
+    public String GetOrders() {
+        return getOrders.getOrders();
     }
 
     // Delete Order Item

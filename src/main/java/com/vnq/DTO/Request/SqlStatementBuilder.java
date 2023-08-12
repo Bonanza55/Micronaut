@@ -53,6 +53,11 @@ public class SqlStatementBuilder {
                 + " group by O.OrderID,I.ItemID,OI.Identity,OI.Quantity";
     }
 
+    public String getOrders() {
+
+        return "select distinct O.OrderID from public.Order O order by O.OrderID";
+    }
+
     public String viewOrder(BigDecimal OrderID) {
 
         return "select distinct O.OrderID,"
